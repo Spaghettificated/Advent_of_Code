@@ -1,1 +1,0 @@
-/mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day13/target/debug/libadvent_of_code_question.rlib: /mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day13/src/lib.rs

@@ -1,1 +1,0 @@
-/mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day10-hampter-loop/target/debug/day10-hampter-loop: /mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day10-hampter-loop/src/main.rs

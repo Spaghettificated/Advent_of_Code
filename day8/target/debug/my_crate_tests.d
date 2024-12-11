@@ -1,1 +1,0 @@
-/mnt/shared/Projects/algorythmics/advent_of_code/day8/target/debug/my_crate_tests: /mnt/shared/Projects/algorythmics/advent_of_code/day8/src/bin/my_crate_tests.rs /mnt/shared/Projects/algorythmics/advent_of_code/day8/src/lib.rs
