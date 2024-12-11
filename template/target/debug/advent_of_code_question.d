@@ -1,0 +1,1 @@
+/mnt/shared/Projects/algorythmics/advent_of_code/template/target/debug/advent_of_code_question: /mnt/shared/Projects/algorythmics/advent_of_code/template/src/lib.rs /mnt/shared/Projects/algorythmics/advent_of_code/template/src/main.rs

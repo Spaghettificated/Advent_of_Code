@@ -1,0 +1,1 @@
+/mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day11-galaxies/target/debug/day11-galaxies: /mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day11-galaxies/src/main.rs

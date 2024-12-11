@@ -1,0 +1,1 @@
+/mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day7-camel-cards/target/debug/day7-camel-cards: /mnt/shared/Projects/algorythmics/advent_of_code/past-events/2023/day7-camel-cards/src/main.rs

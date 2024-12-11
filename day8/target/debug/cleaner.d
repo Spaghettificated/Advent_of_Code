@@ -1,0 +1,1 @@
+/mnt/shared/Projects/algorythmics/advent_of_code/day8/target/debug/cleaner: /mnt/shared/Projects/algorythmics/advent_of_code/day8/src/bin/cleaner.rs /mnt/shared/Projects/algorythmics/advent_of_code/day8/src/lib.rs
