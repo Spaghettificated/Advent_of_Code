@@ -1,20 +1,26 @@
 // my scuffed helper functions
 
-// for treating tuples as knock-off vectors
+// for treating tuples as knock-off 2D vectors
 pub mod tuples_galore{
+    use std::ops::{Add, Div, Mul, Neg, Sub};
+
     pub fn map2<T,U>(x: (T,T), f: fn(T) -> U) -> (U,U){
         (f(x.0), f(x.1))
     }
     pub fn operate2<T,U,V>(x: (T,T), y: (U,U), f: fn(T,U) -> V) -> (V,V){
         (f(x.0, y.0), f(x.1, y.1))
     }
-
+    pub fn neg2<T,V>(x: (T,T)) -> (V,V)             where T: Neg<Output = V>    { map2(x, |x| -x) }
+    pub fn add2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Add<U, Output = V> { operate2(x, y, |x,y| x + y) }
+    pub fn sub2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Sub<U, Output = V> { operate2(x, y, |x,y| x - y) }
+    pub fn mul2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Mul<U, Output = V> { operate2(x, y, |x,y| x * y) }
+    pub fn div2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Div<U, Output = V> { operate2(x, y, |x,y| x / y) }
 }
 
 // for better manipulation of 2d arrays
 pub mod array2d{
     use crate::tuples_galore::map2;
-    // functions are kinda scuffed, cuz they create new vectors instead of iterators, the trait is so usefull tho
+    // functions are kinda scuffed as they create new arrays instead of iterators, the trait is so usefull tho
     pub fn enumerate_array2d<T>(array: &Vec<Vec<T>>) -> Vec<Vec<((usize,usize),&T)>>{
         array.iter().enumerate().map(|(i,row)| row.iter().enumerate().map(|(j,x)| ((i,j),x)).collect()).collect()
     }
@@ -127,7 +133,88 @@ pub mod input{
         }
         out
     }
-    // pub fn as_array2d(s: &str) -> Vec<Vec<char>>
-    // pub fn as_array2d(s: &str) -> Vec<Vec<char>>
-    // pub fn as_array2d(s: &str) -> Vec<Vec<char>>
+}
+
+pub mod copycat{
+    // 'borrowed' from a friend at https://gitlab.com/fili_pk/aoc24/-/blob/master/utils/src/lib.rs?ref_type=heads
+    pub struct FindOverlapping<'a, T> {
+        t: &'a [T],
+        pattern: &'a [T],
+        idx: usize,
+    }
+    
+    impl<'a, T: Eq> Iterator for FindOverlapping<'a, T> {
+        type Item = usize;
+        fn next(&mut self) -> Option<usize> {
+            if self.idx + self.pattern.len().max(1) > self.t.len() {
+                return None;
+            }
+    
+            while !self.t[self.idx..].starts_with(self.pattern) {
+                self.idx += 1;
+                if self.idx + self.pattern.len().max(1) > self.t.len() {
+                    return None;
+                }
+            }
+    
+            let v = Some(self.idx);
+            self.idx += 1;
+            v
+        }
+    }
+    
+    pub trait FindOverlappingExt<T> {
+        fn find_overlapping<'a>(&'a self, pattern: &'a [T]) -> FindOverlapping<'a, T>;
+    }
+    
+    impl<T: Eq> FindOverlappingExt<T> for [T] {
+        fn find_overlapping<'a>(&'a self, pattern: &'a [T]) -> FindOverlapping<'a, T> {
+            FindOverlapping {
+                t: self,
+                pattern,
+                idx: 0,
+            }
+        }
+    }
+    
+    pub struct FindNotOverlapping<'a, T> {
+        t: &'a [T],
+        pattern: &'a [T],
+        idx: usize,
+    }
+    
+    impl<'a, T: Eq> Iterator for FindNotOverlapping<'a, T> {
+        type Item = usize;
+        fn next(&mut self) -> Option<usize> {
+            if self.idx + self.pattern.len().max(1) > self.t.len() {
+                return None;
+            }
+    
+            while !self.t[self.idx..].starts_with(self.pattern) {
+                self.idx += 1;
+                if self.idx + self.pattern.len().max(1) > self.t.len() {
+                    return None;
+                }
+            }
+    
+            let v = Some(self.idx);
+            self.idx += self.pattern.len();
+            v
+        }
+    }
+    
+    pub trait FindNotOverlappingExt<T> {
+        fn find_not_overlapping<'a>(&'a self, pattern: &'a [T]) -> FindNotOverlapping<'a, T>;
+    }
+    
+    impl<T: Eq> FindNotOverlappingExt<T> for [T] {
+        fn find_not_overlapping<'a>(&'a self, pattern: &'a [T]) -> FindNotOverlapping<'a, T> {
+            FindNotOverlapping {
+                t: self,
+                pattern,
+                idx: 0,
+            }
+        }
+    }
+    
 }
