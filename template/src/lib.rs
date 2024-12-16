@@ -1,6 +1,6 @@
 // my scuffed helper functions
 
-// for treating tuples as knock-off 2D vectors
+// for treating tuples (and arrays) as knock-off 2D vectors
 pub mod tuples_galore{
     use std::ops::{Add, Div, Mul, Neg, Sub};
 
@@ -15,6 +15,19 @@ pub mod tuples_galore{
     pub fn sub2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Sub<U, Output = V> { operate2(x, y, |x,y| x - y) }
     pub fn mul2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Mul<U, Output = V> { operate2(x, y, |x,y| x * y) }
     pub fn div2<T,U,V>(x: (T,T), y: (U,U)) -> (V,V) where T: Div<U, Output = V> { operate2(x, y, |x,y| x / y) }
+    pub fn operate_n<T:Copy, U:Copy, V:Copy, F: Fn(T,U)->V, const N: usize>(a: &[T;N], b: &[U;N], f: F) -> [V;N] {
+        let mut out = [None; N];
+        for ((o, a), b) in out.iter_mut().zip(a).zip(b){
+            *o = Some(f(*a,*b));
+        }
+        out.map(|x| x.unwrap())
+        // a.iter().zip(b).map(|x| x)
+    }
+    pub fn neg_n<T: Copy, V, const N: usize>(x: &[T;N]) -> [V;N]                           where T: Neg<Output = V>    { x.map(|x| -x) }
+    pub fn add_n<T: Copy, U: Copy, V: Copy, const N: usize>(x: &[T;N], y: &[U;N]) -> [V;N] where T: Add<U, Output = V> { operate_n(x, y, |x,y| x + y) }
+    pub fn sub_n<T: Copy, U: Copy, V: Copy, const N: usize>(x: &[T;N], y: &[U;N]) -> [V;N] where T: Sub<U, Output = V> { operate_n(x, y, |x,y| x - y) }
+    pub fn mul_n<T: Copy, U: Copy, V: Copy, const N: usize>(x: &[T;N], y: &[U;N]) -> [V;N] where T: Mul<U, Output = V> { operate_n(x, y, |x,y| x * y) }
+    pub fn div_n<T: Copy, U: Copy, V: Copy, const N: usize>(x: &[T;N], y: &[U;N]) -> [V;N] where T: Div<U, Output = V> { operate_n(x, y, |x,y| x / y) }
 }
 
 // for better manipulation of 2d arrays
@@ -67,7 +80,15 @@ pub mod array2d{
 // for quickly parsing input
 pub mod input{
     use std::{fmt::Debug, str::FromStr};
-
+    fn size2d<T>(array: &[Vec<T>]) -> (usize, usize) { (array.len(), array.get(0).map(|x| x.len()).unwrap_or(0)) }
+    fn print2d(map: &[Vec<char>]) {
+        for row in map{
+            for c in row{
+                print!("{c}");
+            }
+            println!();
+        }
+    }
     pub fn as_array2d(s: &str) -> Vec<Vec<char>>{
         s.lines()
         .map(|l| l.chars().collect::<Vec<_>>())
